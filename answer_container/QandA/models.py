@@ -24,4 +24,4 @@ class Answer(models.Model):
 class Vote(models.Model):
     profile = models.ForeignKey(Profile)
     answer = models.ForeignKey('Answer')
-    upvote = models.BooleanField(null=True)
+    upvote = models.NullBooleanField(default=True)
