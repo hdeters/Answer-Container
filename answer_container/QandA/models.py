@@ -14,7 +14,7 @@ class Tag(models.Model):
     questions = models.ManyToManyField('Question')
 
 
-class AnswerManager(models.ModelManager):
+class AnswerManager(models.Manager):
     def get_queryset(self):
         return Answer.objects.all().prefetch_related('vote_set')
 
