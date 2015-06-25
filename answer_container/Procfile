@@ -1,1 +1,0 @@
-web:gunicorn answer_container.wsgi --log-file -
