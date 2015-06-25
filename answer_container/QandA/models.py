@@ -14,11 +14,22 @@ class Tag(models.Model):
     questions = models.ManyToManyField('Question')
 
 
+class AnswerManager(models.ModelManager):
+    def get_queryset(self):
+        return Answer.objects.all().prefetch_related('vote_set')
+
+
 class Answer(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile)
     question = models.ForeignKey('Question')
-    score = models.IntegerField(default=0)
+
+    object = AnswerManager()
+
+    @property
+    def score(self):
+        return self.vote_set.filter(upvote=True).count() - \
+               self.vote_set.filter(upvote=False).count()
 
 
 class Vote(models.Model):
