@@ -7,7 +7,7 @@ class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     profile = models.ForeignKey(Profile)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.title
@@ -20,7 +20,7 @@ class Tag(models.Model):
 
 class AnswerManager(models.Manager):
     def get_queryset(self):
-        return Answer.objects.all().prefetch_related('vote_set')
+        return super().get_queryset().prefetch_related('vote_set')
 
 
 class Answer(models.Model):
