@@ -5,6 +5,10 @@
 
 {% block content %}
 
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 <h1>Questions</h1>
 
 <ul>
@@ -12,5 +16,7 @@
   <li><a href='{% url 'qanda:question' pk=item.pk %}'>{{ item.title }}</a></li>
   {% endfor %}
 </ul>
+{% bootstrap_pagination page_obj %}
+
 
 {% endblock %}

@@ -11,7 +11,7 @@ from QandA.forms import AnswerCreateForm
 class Questions(ListView):
     model = Question
     template_name = 'QandA/question_list.html'
-    paginated_by = 10
+    paginate_by = 10
 
     def get_queryset(self):
         return Question.objects.all().order_by('-timestamp')
