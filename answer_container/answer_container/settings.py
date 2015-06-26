@@ -74,6 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'answer_container.wsgi.application'
 
+LOGIN_URL = 'users:login'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

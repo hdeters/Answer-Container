@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
 from QandA.models import Question
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from QandA.forms import AnswerCreateForm
 
@@ -23,13 +25,22 @@ class QuestionDetail(DetailView):
         context['answers'] = object.answer_set.all()
         return context
 
+
 class CreateQuestion(CreateView):
     model = Question
     fields = ['title', 'text']
 
+    @method_decorator(login_required)
+    def get(self):
+        return super().get()
+
+    @method_decorator(login_required)
+    def post(self):
+        return super.get()
+
 
 class CreateAnswer(TemplateView):
-
+    @method_decorator(login_required)
     def get(self, request, pk):
         form = AnswerCreateForm()
         question = get_object_or_404(Question, pk=pk)
@@ -39,6 +50,7 @@ class CreateAnswer(TemplateView):
         context['form'] = form
         return render(request, 'QandA/answer-create.html', context)
 
+    @method_decorator(login_required)
     def post(self, request, pk):
         form = AnswerCreateForm(request.POST['form'])
         if form.is_valid():

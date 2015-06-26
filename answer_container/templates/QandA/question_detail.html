@@ -16,5 +16,5 @@
     <p>{{ answer.text }}</p>Answer Score:</li>
   {% endfor %}
 </ul>
-
+<a href='{% url 'qanda:answer' pk=object.pk %}'>Answer this question</a>
 {% endblock %}
