@@ -40,3 +40,6 @@ class Vote(models.Model):
     profile = models.ForeignKey(Profile)
     answer = models.ForeignKey('Answer')
     upvote = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ('profile', 'answer',)
