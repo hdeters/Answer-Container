@@ -4,6 +4,7 @@ __pycache__/
 .direnv
 .direnv/*
 migrations/
+.idea/
 
 # C extensions
 *.so
