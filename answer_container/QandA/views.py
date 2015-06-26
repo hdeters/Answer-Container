@@ -9,6 +9,14 @@ import datetime
 from QandA.forms import AnswerCreateForm
 
 
+@login_required
+def upvote(request, pk):
+    answer = get_object_or_404(Answer, pk=pk)
+    answer.vote_set.create(profile=request.user.profile)
+
+    return redirect('qanda:question', pk=answer.question.pk)
+
+
 class Questions(ListView):
     model = Question
     template_name = 'QandA/question_list.html'
@@ -23,7 +31,7 @@ class QuestionDetail(DetailView):
 
     def get_context_data(self, object):
         context = super().get_context_data()
-        context['answers'] = object.answer_set.all()
+        context['answers'] = object.answer_set.all().order_by('-score')
         return context
 
 
@@ -59,11 +67,10 @@ class CreateAnswer(TemplateView):
 
     @method_decorator(login_required)
     def post(self, request, pk):
-        form = AnswerCreateForm(request.POST['form'])
+        form = AnswerCreateForm(request.POST)
         if form.is_valid():
             question = get_object_or_404(Question, pk=pk)
-            form.save(commit=False)
-            question.answer_set.create(text=form.text, \
+            question.answer_set.create(text=form['text'], \
                                        profile=request.user.profile)
 
             return redirect('QandA:question', pk=question.pk)
