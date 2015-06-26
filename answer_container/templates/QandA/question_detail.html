@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ object.title }}</h1>
+
+<p>
+  {{ object.text }}
+</p>
+
+<ul>
+  {% for answer in answers %}
+  <li><a href='{% url 'users:profile' prof_id=answer.profile.pk %}'>{{ answer.profile.user.username }}</a>:
+    <p>{{ answer.text }}</p>Answer Score:</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

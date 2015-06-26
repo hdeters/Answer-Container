@@ -3,10 +3,13 @@ __pycache__/
 *.py[cod]
 .direnv
 .direnv/*
+migrations/
+.idea/
 .idea
 .idea/*
 migrations/
 migrations/*
+
 
 # C extensions
 *.so
