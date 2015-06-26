@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 
 
 {% block content %}
@@ -17,6 +18,7 @@
   {% endfor %}
 </ul>
 {% bootstrap_pagination page_obj %}
+
 
 
 {% endblock %}
