@@ -63,5 +63,5 @@ class ShowProfileDetailView(DetailView):
         context['answers'] = answers
         context['score'] = score
         context['own'] = own
-        context['bio'] = object.bio
+        context['bio'] = self.object.bio
         return context
