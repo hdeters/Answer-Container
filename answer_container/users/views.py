@@ -6,7 +6,6 @@ from django.contrib import messages
 from users.models import Profile
 from QandA.models import Question, Answer
 
-
 # Create your views here.
 
 class AddUserView(View):
@@ -64,4 +63,5 @@ class ShowProfileDetailView(DetailView):
         context['answers'] = answers
         context['score'] = score
         context['own'] = own
+        context['bio'] = object.bio
         return context
