@@ -3,7 +3,8 @@ from django.views.generic import ListView, DetailView, View
 from users.forms import UserForm, ProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-
+from users.models import Profile
+from QandA.models import Question, Answer
 
 # Create your views here.
 
@@ -38,3 +39,29 @@ class AddUserView(View):
             return redirect("QandA:index")
         else:
             return render(request, "register.html", {"form1": user_form, "form2": profile_form})
+
+
+class ShowProfileDetailView(DetailView):
+    model = Profile
+    context_object_name = 'profile'
+    template_name = 'show_profile.html'
+
+    def get_object(self, queryset=None):
+        return Profile.objects.get(pk=self.kwargs['prof_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        questions = Question.objects.filter(profile=self.object).order_by('timestamp')
+        answers = Answer.objects.filter(profile=self.object)
+        score = self.object.get_score
+        user = self.object.user
+        if user == self.object:
+            own = True
+        else:
+            own = False
+        context['questions'] = questions
+        context['answers'] = answers
+        context['score'] = score
+        context['own'] = own
+        context['bio'] = object.bio
+        return context
