@@ -44,7 +44,7 @@ class AddUserView(View):
 class ShowProfileDetailView(DetailView):
     model = Profile
     context_object_name = 'profile'
-    template_name = 'show_profile.html'
+    template_name = 'profile.html'
 
     def get_object(self, queryset=None):
         return Profile.objects.get(pk=self.kwargs['prof_id'])
@@ -54,8 +54,8 @@ class ShowProfileDetailView(DetailView):
         questions = Question.objects.filter(profile=self.object).order_by('timestamp')
         answers = Answer.objects.filter(profile=self.object)
         score = self.object.get_score
-        user = self.object.user
-        if user == self.object:
+        user = self.request.user
+        if user == self.object.user:
             own = True
         else:
             own = False
@@ -63,5 +63,5 @@ class ShowProfileDetailView(DetailView):
         context['answers'] = answers
         context['score'] = score
         context['own'] = own
-        context['bio'] = object.bio
+        context['bio'] = self.object.bio
         return context
