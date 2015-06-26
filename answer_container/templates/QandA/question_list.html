@@ -9,7 +9,7 @@
 
 <ul>
   {% for item in object_list %}
-  <li><a href=''>{{ item.title }}</a></li>
+  <li><a href='{% url 'qanda:question' pk=item.pk %}'>{{ item.title }}</a></li>
   {% endfor %}
 </ul>
 

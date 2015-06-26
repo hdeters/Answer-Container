@@ -6,16 +6,16 @@ from QandA.models import Question
 
 class QuestionsView(ListView):
     model = Question
-    template_name = 'QandA/question-list.html'
+    template_name = 'QandA/question_list.html'
     paginated_by = 10
 
     def get_queryset(self):
-        Question.objects.all().order_by('-timestamp')
+        return Question.objects.all().order_by('-timestamp')
 
 
 class QuestionDetail(DetailView):
     model = Question
-    
+
 
 class CreateQuestionView(CreateView):
     model = Question
