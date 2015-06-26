@@ -9,13 +9,17 @@ class Profile(models.Model):
 
     @property
     def get_score(self):
+        from QandA.models import Vote
+
         score = 0
         question_count = self.question_set.count()
         score += (5 * question_count)
-        # answers = self.answer_set.all().values('vote').annotate(up_votes=Count(upvote=True, distinct=True),
-        #                                                         down_votes=Count(upvote=False, distinct=True))
-        # score += (10 * answers.up_votes)
-        # score -= (5 * answers.down_votes)
+
+        good = Vote.objects.filter(answer__profile=self, upvote=True).count()
+        bad = Vote.objects.filter(answer__profile=self, upvote=False).count()
+
+        score += (10 * good)
+        score -= (5 * bad)
 
         downvoted_answers = self.vote_set.filter(upvote=False).count()
         score -= downvoted_answers

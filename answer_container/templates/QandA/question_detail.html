@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1>{{ object.title }}</h1>
+<h2>{{ object.title }}</h2>
 
 <p>
   {{ object.text }}
@@ -12,7 +12,7 @@
 
 <ul>
   {% for answer in answers %}
-  <li><a href='{% url 'users:profile' prof_id=answer.profile.pk %}'>{{ answer.profile.user.username }}</a>:
+  <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">{{ answer.profile.user.username }}</a>:
     <p>{{ answer.text }}</p>Answer Score:</li>
   {% endfor %}
 </ul>
