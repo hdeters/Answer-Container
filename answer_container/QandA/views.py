@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
-from QandA.models import Question
+from QandA.models import Question, Vote, Answer
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 import datetime
 
 from QandA.forms import AnswerCreateForm
@@ -15,7 +16,13 @@ class Questions(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Question.objects.all().order_by('-timestamp')
+        return Question.objects.all().annotate(ans_count=Count('answer')).order_by('-timestamp')
+
+    # def get_context_data(self):
+    #     context = super().get_context_data()
+    #     answer_count = Question.objects.annotate(ans_count=Count('answer'))
+    #     context['answer_count'] = answer_count
+    #     return context
 
 
 class QuestionDetail(DetailView):
