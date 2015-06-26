@@ -8,6 +8,9 @@ class Question(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile)
 
+    def __str__(self):
+        return self.title
+
 
 class Tag(models.Model):
     text = models.TextField()
