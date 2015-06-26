@@ -12,14 +12,10 @@ class Profile(models.Model):
         score = 0
         question_count = self.question_set.count()
         score += (5 * question_count)
-        # bad_answers = self.answer_set.annotate(up_votes=Count(vote_set__upvote=True))
-        #answers = self.answer_set.annotate(upvotes=Count(upvote=True, distinct=True), downvotes=Count(upvote=False, distinct=True))
-        answers = self.answer_set.prefetch_related('vote_set').annotate(upvote=Count(upvote=True))
-
-        # answers = self.answer_set.annotate(up_votes=Count(vote_set__upvote=True, distinct=True),
-        #                                    down_votes=Count(vote_set__upvote=False, distinct=True))
-        score += (10 * upanswers)
-        score -= (5 * downanswers)
+        # answers = self.answer_set.all().values('vote').annotate(up_votes=Count(upvote=True, distinct=True),
+        #                                                         down_votes=Count(upvote=False, distinct=True))
+        # score += (10 * answers.up_votes)
+        # score -= (5 * answers.down_votes)
 
         downvoted_answers = self.vote_set.filter(upvote=False).count()
         score -= downvoted_answers

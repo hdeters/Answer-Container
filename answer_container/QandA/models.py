@@ -28,7 +28,7 @@ class Answer(models.Model):
     profile = models.ForeignKey(Profile)
     question = models.ForeignKey('Question')
 
-    object = AnswerManager()
+    objects = AnswerManager()
 
     @property
     def score(self):
