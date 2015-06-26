@@ -1,11 +1,52 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Qanda</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 </head>
 <body>
-{% block content %}
-{% endblock %}
+
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <img class="navbar-brand" src={% static "questionmark.png" %}>
+            <a class='navbar-brand' href="{% url 'qanda:questions' %}">Qanda</a>
+        </div>
+        {% if request.user.is_authenticated %}
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="{% url 'qanda:question-create' %}">New Question</a>
+            </li>
+            <li>
+                <a href="{% url 'users:profile' request.user.profile.id %}">{{ request.user.username }}</a>
+            </li>
+            <li>
+                <a href="{% url 'users:logout' %}">Logout</a>
+            </li>
+        </ul>
+        {% else %}
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="{% url 'users:login' %}?next={{ request.path }}">Login</a>
+            </li>
+            <li>
+                <a href="{% url 'users:user_register' %}?next={{request.path}}">Register</a>
+            </li>
+        </ul>
+        {% endif %}
+        </ul>
+    </div>
+    </div>
+</nav>
+<div class="body-content">
+    {% block content %}
+
+    {% endblock %}
+</div>
 </body>
 </html>

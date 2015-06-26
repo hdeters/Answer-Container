@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'users',
     'QandA',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,6 +56,32 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'answer_container.urls'
+LOGIN_URL = 'users/login'
+
+# Default settings
+BOOTSTRAP3 = {
+
+    # The URL to the jQuery JavaScript file
+    'jquery_url': '//code.jquery.com/jquery.min.js',
+
+    # The Bootstrap base URL
+    'base_url': '/static/bootstrap/',
+
+    # The complete URL to the Bootstrap CSS file (None means derive it from base_url)
+    'css_url': None,
+
+    # # The complete URL to the Bootstrap CSS file (None means no theme) use bootswatch for this
+    'theme_url': '/static/bootstrap/css/superhero/bootstrap.min.css',
+
+    # The complete URL to the Bootstrap JavaScript file (None means derive it from base_url)
+    'javascript_url': None,
+
+    # Put JavaScript in the HEAD section of the HTML document (only relevant if you use bootstrap3.html)
+    'javascript_in_head': False,
+
+    # Include jQuery with Bootstrap JavaScript (affects django-bootstrap3 template tags)
+    'include_jquery': True,
+}
 
 TEMPLATES = [
     {
@@ -74,6 +101,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'answer_container.wsgi.application'
 
+LOGIN_URL = 'users:login'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -110,3 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+
+)

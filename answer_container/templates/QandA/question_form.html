@@ -4,11 +4,7 @@
 
 {% block content %}
 
-<h2>New Answer</h1>
-
-{{ question.title }}
-<hr>
-{{ question.text }}
+<h2>New Question</h1>
 
 <form method="post" action=''>
   {% csrf_token %}

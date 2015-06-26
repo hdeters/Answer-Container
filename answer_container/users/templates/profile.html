@@ -7,23 +7,24 @@
     <p>
         Bio: {{ bio }}<br/>
         Score: {{ score }}
+        {% if own %}
+        <p><a href="{% url 'qanda:question-create' %}">Ask Question</a></p>
+        {% endif %}
     </p>
 
     <div class="row">
         <div class="col-md-6">
             <h3>Questions:</h3>
             {% for q in questions %}
-            <p><a href="{% url 'question' q.id %}">{{ q.title }}</a></p>
+            <p><a href="{% url 'qanda:question' pk=q.id %}">{{ q.title }}</a></p>
+            {% endfor %}
         </div>
         <div class="col-md-6">
             <h3>Answers:</h3>
             {% for a in answers %}
-            <p><a href="{% url 'answer' a.question.id %}">{{ a.question.title }}</a></p>
+            <p><a href="{% url 'qanda:answer' pk=a.question.id %}">{{ a.question.title }}</a></p>
             {% endfor %}
         </div>
-        {% if own %}
-        <p><a href="{% url 'question-create' %}">Ask Question</a></p>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
