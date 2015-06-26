@@ -3,8 +3,10 @@ from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
 from QandA.models import Question
 
+from QandA.forms import AnswerCreateForm
 
-class QuestionsView(ListView):
+
+class Questions(ListView):
     model = Question
     template_name = 'QandA/question_list.html'
     paginated_by = 10
@@ -16,7 +18,36 @@ class QuestionsView(ListView):
 class QuestionDetail(DetailView):
     model = Question
 
+    def get_context_data(self, object):
+        context = super().get_context_data()
+        context['answers'] = object.answer_set.all()
+        return context
 
-class CreateQuestionView(CreateView):
+class CreateQuestion(CreateView):
     model = Question
     fields = ['title', 'text']
+
+
+class CreateAnswer(TemplateView):
+
+    def get(self, request, pk):
+        form = AnswerCreateForm()
+        question = get_object_or_404(Question, pk=pk)
+        context = self.get_context_data()
+        context['question'] = question
+        context['profile'] = request.user.profile
+        context['form'] = form
+        return render(request, 'QandA/answer-create.html', context)
+
+    def post(self, request, pk):
+        form = AnswerCreateForm(request.POST['form'])
+        if form.is_valid():
+            question = get_object_or_404(Question, pk=pk)
+            form.save(commit=False)
+            question.answer_set.create(text=form.text, \
+                                       profile=request.user.profile)
+
+            return redirect('QandA:question', pk=question.pk)
+
+        context['form_errors'] = form.errors
+        return render(request, 'QandA/answer-create.html', context)

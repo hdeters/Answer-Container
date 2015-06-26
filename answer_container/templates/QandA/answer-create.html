@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>New Answer</h1>
+
+{{ question.title }}
+<hr>
+{{ question.text }}
+
+<form method="post" action=''>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Create" />
+</form>
+
+{% endblock %}
