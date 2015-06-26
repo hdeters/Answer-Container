@@ -5,7 +5,10 @@ __pycache__/
 .direnv/*
 .idea
 .idea/*
+<<<<<<< HEAD
 /migrations
+=======
+>>>>>>> master
 
 # C extensions
 *.so

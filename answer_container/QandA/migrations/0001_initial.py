@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Answer',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('text', models.TextField()),
                 ('score', models.IntegerField(default=0)),
                 ('profile', models.ForeignKey(to='users.Profile')),
@@ -23,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Question',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
                 ('text', models.TextField()),
                 ('profile', models.ForeignKey(to='users.Profile')),
@@ -32,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('text', models.TextField()),
                 ('questions', models.ManyToManyField(to='QandA.Question')),
             ],
@@ -40,8 +41,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Vote',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
-                ('upvote', models.NullBooleanField(default=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('upvote', models.BooleanField(default=True)),
                 ('answer', models.ForeignKey(to='QandA.Answer')),
                 ('profile', models.ForeignKey(to='users.Profile')),
             ],
