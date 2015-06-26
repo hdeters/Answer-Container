@@ -9,6 +9,9 @@ class Question(models.Model):
     profile = models.ForeignKey(Profile)
     timestamp = models.DateTimeField()
 
+    def __str__(self):
+        return self.title
+
 
 class Tag(models.Model):
     text = models.TextField()
