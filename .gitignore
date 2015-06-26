@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .direnv
 .direnv/*
+migrations/
 
 # C extensions
 *.so
