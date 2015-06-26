@@ -36,7 +36,8 @@ class AddUserView(View):
                 request,
                 messages.SUCCESS,
                 "Account Successfully Created.")
-            return redirect("qanda:index")
+            return redirect("qanda:questions")
+
         else:
             return render(request, "register.html", {"form1": user_form, "form2": profile_form})
 

@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
     <meta charset="UTF-8">
     <title>Qanda</title>
     {% bootstrap_css %}
@@ -13,7 +14,7 @@
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
         <div class="navbar-header">
-            <img class = "navbar-brand" src={% static "questionmark.png" %}>
+            <img class="navbar-brand" src={% static "questionmark.png" %}>
             <a class='navbar-brand' href="{% url 'qanda:questions' %}">Qanda</a>
         </div>
         {% if request.user.is_authenticated %}
@@ -42,9 +43,10 @@
     </div>
     </div>
 </nav>
+<div class="body-content">
+    {% block content %}
 
-{% block content %}
-
-{% endblock %}
+    {% endblock %}
+</div>
 </body>
 </html>
