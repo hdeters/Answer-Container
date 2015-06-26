@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView
 from QandA.models import Question
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+import datetime
 
 from QandA.forms import AnswerCreateForm
 
@@ -31,13 +32,19 @@ class CreateQuestion(CreateView):
     fields = ['title', 'text']
 
     @method_decorator(login_required)
-    def get(self):
-        return super().get()
+    def get(self, request):
+        return super().get(request)
 
     @method_decorator(login_required)
-    def post(self):
-        return super.get()
+    def post(self, request):
+        title = request.POST['title']
+        text = request.POST['text']
 
+        Question.objects.create(title=title, text=text, \
+                                profile=request.user.profile, \
+                                timestamp=datetime.datetime.utcnow())
+
+        return redirect('users:profile', prof_id=request.user.profile.pk)
 
 class CreateAnswer(TemplateView):
     @method_decorator(login_required)
