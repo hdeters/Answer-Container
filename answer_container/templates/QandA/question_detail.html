@@ -7,14 +7,20 @@
 <h2>{{ object.title }}</h2>
 
 <p>
-  {{ object.text }}
+    {{ object.text }}
 </p>
 
 <ul>
-  {% for answer in answers %}
-  <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">{{ answer.profile.user.username }}</a>:
-    <p>{{ answer.text }}</p>Answer Score:</li>
-  {% endfor %}
+    {% for answer in answers %}
+    <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">{{ answer.profile.user.username }}</a>:
+        <p>{{ answer.text }}</p>Answer Score:<br />
+        {% if not object.accepted_answer  %}
+        {% if own %}
+        <a href="{% url 'qanda:accept_answer' ans_pk=answer.id q_pk=object.id %}">Accept This Answer</a>
+        {% endif %}
+        {% endif %}
+    </li>
+    {% endfor %}
 </ul>
-<a href='{% url 'qanda:answer' pk=object.pk %}'>Answer this question</a>
+<a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>
 {% endblock %}

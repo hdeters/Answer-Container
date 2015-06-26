@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Answer Accepted!</h1>
+
+<a href="{% url 'qanda:question' pk=q_pk %}">Back</a>
+
+{% endblock %}
