@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from QandA.models import Vote, Answer, Question
 from users.models import Profile
@@ -12,8 +13,10 @@ class VoteSerializer(serializers.Serializer):
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     """  for main list display of Answers"""
-    profile = serializers.HyperlinkedRelatedField(read_only=True, view_name='profile-detail')
-    question = serializers.HyperlinkedRelatedField(read_only=True, view_name='question-detail')
+    profile = serializers.HyperlinkedRelatedField(read_only=True, \
+                                                  view_name='profile-detail')
+    question = serializers.HyperlinkedRelatedField(read_only=True, \
+                                                   view_name='question-detail')
     vote_set = VoteSerializer('vote_set', read_only=True)
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
@@ -31,12 +34,14 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('url', 'profile', 'question', 'score', 'vote_set', 'upvotes', 'downvotes')
+        fields = ('url', 'profile', 'question', 'score', 'vote_set', \
+                  'upvotes', 'downvotes')
 
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     """ for main list display of questions"""
-    profile = serializers.HyperlinkedRelatedField(read_only=True, view_name='profile-detail')
+    profile = serializers.HyperlinkedRelatedField(read_only=True, \
+                                                  view_name='profile-detail')
     #answer_set = AnswerSerializer('answer_set', read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
@@ -47,8 +52,10 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnswerEditSerializer(serializers.Serializer):
     """ for editing and creation of Answers"""
-    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
-    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+    profile = serializers.PrimaryKeyRelatedField(\
+                    queryset=Profile.objects.all())
+    question = serializers.PrimaryKeyRelatedField(\
+                    queryset=Question.objects.all())
     vote_set = VoteSerializer('vote_set')
 
     class Meta:
@@ -73,10 +80,22 @@ class AnswerEditSerializer(serializers.Serializer):
         return answer
 
 
+class UserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('username', )
+
+
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    question_set = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='question-detail')
-    #answer_set = serializers.HyperlinkedRelatedField(read_only=True, view_name='answer-detail')
+    user = UserSerializer('user')
+    question_set = serializers.HyperlinkedRelatedField(many=True, \
+                                                    read_only=True, \
+                                                    view_name='question-detail')
+    #answer_set = serializers.HyperlinkedRelatedField(read_only=True, \
+    #                                                 view_name='answer-detail')
 
     class Meta:
         model = Profile
-        fields = ('url', 'question_set',)# answer_set,)
+        fields = ('url', 'user', 'question_set',)# answer_set,)
