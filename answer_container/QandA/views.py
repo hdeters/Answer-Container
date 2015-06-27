@@ -1,20 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
-<<<<<<< HEAD
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-=======
-from QandA.models import Question, Vote, Answer
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
->>>>>>> master
+
 import datetime
 
 from QandA.forms import AnswerCreateForm
-from QandA.models import Question, Answer
+from QandA.models import Question, Vote, Answer
 
 
 @login_required
