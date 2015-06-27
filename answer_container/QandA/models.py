@@ -31,7 +31,7 @@ class Answer(models.Model):
 
     objects = AnswerManager()
 
-    def get_score(self):
+    def set_score(self):
         if self.vote_set.exists():
             self.score = self.vote_set.filter(upvote=True).count() - \
                    self.vote_set.filter(upvote=False).count()

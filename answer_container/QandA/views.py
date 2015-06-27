@@ -31,7 +31,7 @@ class QuestionDetail(DetailView):
 
     def get_context_data(self, object):
         context = super().get_context_data()
-        context['answers'] = object.answer_set.all().order_by('-score')
+        context['answers'] = object.answer_set.all()#.order_by('-score')
         return context
 
 
