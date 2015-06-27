@@ -7,6 +7,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'django.contrib.sites',
+    'django_comments',
+    'users',
+    'QandA',
+    'bootstrap3',
 )
 
 # Parse database configuration from $DATABASE_URL
