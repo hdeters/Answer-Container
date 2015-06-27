@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
-from QandA.models import Question
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import datetime
 
 from QandA.forms import AnswerCreateForm
+from QandA.models import Question, Answer
 
 
 @login_required
@@ -16,12 +17,14 @@ def upvote(request, pk):
 
     return redirect('qanda:question', pk=answer.question.pk)
 
+
 @login_required
 def downvote(request, pk):
     answer = get_object_or_404(Answer, pk=pk)
     answer.vote_set.create(profile=request.user.profile, upvote=False)
 
     return redirect('qanda:question', pk=answer.question.pk)
+
 
 class Questions(ListView):
     model = Question
@@ -37,7 +40,16 @@ class QuestionDetail(DetailView):
 
     def get_context_data(self, object):
         context = super().get_context_data()
-        context['answers'] = object.answer_set.all()#.order_by('-score')
+        answers = object.answer_set.all()
+        for item in answers:
+            item.set_score()
+            item.save()
+
+            if item.vote_set.filter(profile=self.request.user.profile).exists():
+                item.voted = True
+
+        context['answers'] = answers.order_by('-score')
+
         return context
 
 
@@ -60,6 +72,7 @@ class CreateQuestion(CreateView):
 
         return redirect('users:profile', prof_id=request.user.profile.pk)
 
+
 class CreateAnswer(TemplateView):
     @method_decorator(login_required)
     def get(self, request, pk):
@@ -76,10 +89,10 @@ class CreateAnswer(TemplateView):
         form = AnswerCreateForm(request.POST)
         if form.is_valid():
             question = get_object_or_404(Question, pk=pk)
-            question.answer_set.create(text=form['text'], \
+            question.answer_set.create(text=form['text'].value(), \
                                        profile=request.user.profile)
 
-            return redirect('QandA:question', pk=question.pk)
+            return redirect('qanda:question', pk=question.pk)
 
         context['form_errors'] = form.errors
         return render(request, 'QandA/answer-create.html', context)

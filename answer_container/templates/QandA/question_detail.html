@@ -17,13 +17,19 @@
       {{ answer.profile.user.username }}</a>:
       {{ answer.text }}</li>
     <li>  Answer Score: {{ answer.score }} </li>
-    <li>
-      <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
-        <input type="submit" value="Upvote"/></form></li>
-      <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
-        <input type="submit" value="Downvote"/>
-      </form>
-    </li>
+
+    {% if not answer.voted %}
+      <li>
+        <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
+          {% csrf_token %}
+          <input type="submit" value="Upvote"/></form></li>
+        <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+          {% csrf_token %}
+          <input type="submit" value="Downvote"/>
+        </form>
+      </li>
+    {% endif %}
+
   {% endfor %}
 </ul>
 <a href='{% url 'qanda:answer' pk=object.pk %}'>Answer this question</a>
