@@ -1,20 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
-<<<<<<< HEAD
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-=======
-from QandA.models import Question, Vote, Answer
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
->>>>>>> master
+
 import datetime
 
 from QandA.forms import AnswerCreateForm
-from QandA.models import Question, Answer
+from QandA.models import Question, Vote, Answer
 
 
 @login_required
@@ -54,12 +49,12 @@ class QuestionDetail(DetailView):
     def get_context_data(self, object):
         context = super().get_context_data()
         answers = object.answer_set.all()
-        for item in answers:
-            item.set_score()
-            item.save()
+        for idx in range(len(answers)):
+            answers[idx].set_score()
+            answers[idx].save()
 
-            if item.vote_set.filter(profile=self.request.user.profile).exists():
-                item.voted = True
+            if answers[idx].vote_set.filter(profile=self.request.user.profile).exists():
+                answers[idx].voted = True
 
         context['answers'] = answers.order_by('-score')
 
@@ -108,11 +103,8 @@ class CreateAnswer(TemplateView):
         form = AnswerCreateForm(request.POST)
         if form.is_valid():
             question = get_object_or_404(Question, pk=pk)
-<<<<<<< HEAD
             question.answer_set.create(text=form['text'].value(), \
-=======
-            question.answer_set.create(text=form['text'], \
->>>>>>> master
+
                                        profile=request.user.profile)
 
             return redirect('qanda:question', pk=question.pk)
