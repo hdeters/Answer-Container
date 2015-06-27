@@ -12,10 +12,16 @@ from QandA.forms import AnswerCreateForm
 @login_required
 def upvote(request, pk):
     answer = get_object_or_404(Answer, pk=pk)
-    answer.vote_set.create(profile=request.user.profile)
+    answer.vote_set.create(profile=request.user.profile, upvote=True)
 
     return redirect('qanda:question', pk=answer.question.pk)
 
+@login_required
+def downvote(request, pk):
+    answer = get_object_or_404(Answer, pk=pk)
+    answer.vote_set.create(profile=request.user.profile, upvote=False)
+
+    return redirect('qanda:question', pk=answer.question.pk)
 
 class Questions(ListView):
     model = Question
