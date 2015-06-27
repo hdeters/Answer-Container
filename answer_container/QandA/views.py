@@ -36,12 +36,6 @@ class Questions(ListView):
     def get_queryset(self):
         return Question.objects.all().annotate(ans_count=Count('answer')).order_by('-timestamp')
 
-    # def get_context_data(self):
-    #     context = super().get_context_data()
-    #     answer_count = Question.objects.annotate(ans_count=Count('answer'))
-    #     context['answer_count'] = answer_count
-    #     return context
-
 
 class QuestionDetail(DetailView):
     model = Question

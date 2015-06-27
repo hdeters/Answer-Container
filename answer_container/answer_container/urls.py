@@ -7,4 +7,5 @@ urlpatterns = [
         namespace='accounts')),
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^qanda/', include('QandA.urls', namespace='qanda')),
+    url(r'^comments/', include('django_comments.urls')),
 ]
