@@ -31,18 +31,18 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('profile', 'question', 'score', 'vote_set', 'upvotes', 'downvotes')
+        fields = ('url', 'profile', 'question', 'score', 'vote_set', 'upvotes', 'downvotes')
 
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     """ for main list display of questions"""
     profile = serializers.HyperlinkedRelatedField(read_only=True, view_name='profile-detail')
-    answer_set = AnswerSerializer('answer_set', read_only=True)
+    #answer_set = AnswerSerializer('answer_set', read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
     class Meta:
         model = Question
-        fields = ('profile', 'answer_set',)# 'tag_set')
+        fields = ('url', 'profile',)# 'answer_set',)# 'tag_set')
 
 
 class AnswerEditSerializer(serializers.Serializer):
@@ -71,3 +71,12 @@ class AnswerEditSerializer(serializers.Serializer):
                 answer.save()
 
         return answer
+
+
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    question_set = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='question-detail')
+    #answer_set = serializers.HyperlinkedRelatedField(read_only=True, view_name='answer-detail')
+
+    class Meta:
+        model = Profile
+        fields = ('url', 'question_set',)# answer_set,)

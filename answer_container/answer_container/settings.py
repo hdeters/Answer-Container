@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'users',
     'QandA',
     'bootstrap3',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
