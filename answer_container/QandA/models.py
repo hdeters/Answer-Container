@@ -8,6 +8,7 @@ class Question(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile)
     timestamp = models.DateTimeField(null=True)
+    accepted_answer = models.IntegerField(null=True)
 
     def __str__(self):
         return self.title
@@ -27,19 +28,22 @@ class Answer(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile)
     question = models.ForeignKey('Question')
+    score = models.IntegerField(default=0)
 
     objects = AnswerManager()
 
-    @property
-    def score(self):
-        return self.vote_set.filter(upvote=True).count() - \
-               self.vote_set.filter(upvote=False).count()
+    def set_score(self):
+        if self.vote_set.exists():
+            self.score = self.vote_set.filter(upvote=True).count() - \
+                   self.vote_set.filter(upvote=False).count()
+        else:
+            self.score = 0
 
 
 class Vote(models.Model):
     profile = models.ForeignKey(Profile)
     answer = models.ForeignKey('Answer')
     upvote = models.BooleanField(default=True)
-    
+
     class Meta:
         unique_together = ('profile', 'answer',)
