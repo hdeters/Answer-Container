@@ -10,8 +10,15 @@ class Profile(models.Model):
     @property
     def get_score(self):
         from QandA.models import Vote
+        from QandA.models import Question
 
         score = 0
+        qs_with_as = Question.objects.filter(~Q(accepted_answer=None))
+        accepted_answer_pks = [q.accepted_answer for q in qs_with_as]
+        accepted_list = self.answer_set.filter(id__in=accepted_answer_pks)
+        if accepted_list:
+            score += 100
+
         question_count = self.question_set.count()
         score += (5 * question_count)
 
