@@ -43,14 +43,14 @@ class QuestionDetail(DetailView):
     def get_context_data(self, object):
         context = super().get_context_data()
         answers = object.answer_set.all()
-        for idx in range(len(answers)):
-            answers[idx].set_score()
-            answers[idx].save()
+        for answer in answers:
+            answer.set_score()
+            answer.save()
 
-            if answers[idx].vote_set.filter(profile=self.request.user.profile).exists():
-                answers[idx].voted = True
+        context['answers'] = list(answers.order_by('-score'))
 
-        context['answers'] = answers.order_by('-score')
+        context['votes'] = [item['answer'] for item in \
+                            self.request.user.profile.vote_set.values('answer')]
 
         if object.profile == self.request.user.profile:
             own = True

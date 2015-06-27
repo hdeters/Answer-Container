@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+{% load comments %}
+{% block content %}
+
+<h2>{{ object.title }}</h2>
+
+<p>
+    {{ object.text }}
+</p>
+
+<ul>
+    {% for answer in answers %}
+
+    <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">
+        {{ answer.profile.user.username }}</a>:
+        {{ answer.text }}
+    </li>
+    <li> Answer Score: {{ answer.score }}</li>
+
+<<<<<<< HEAD
+    {% if not answer.voted %}
+    <li>
+=======
+    {% if not answer.pk in votes %}
+      <li>
+>>>>>>> 4ebb5eb18c0ab16125894128e21c02b44bcb1660
+        <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
+            {% csrf_token %}
+            <input type="submit" value="Upvote"/></form>
+    </li>
+    <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+        {% csrf_token %}
+        <input type="submit" value="Downvote"/>
+    </form>
+    </li>
+    {% endif %}
+    {% if user.is_authenticated %}
+    {% get_comment_form for answer as form %}
+    <form action="{% comment_form_target %}" method="POST">
+    {% csrf_token %}
+    {{ form.comment }}
+    {{ form.honeypot }}
+    {{ form.content_type }}
+    {{ form.answer_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+    <input type="submit" value="Add comment" id="id_submit" />
+    </form>
+{% else %}
+    <p>Please <a href="{% url 'users:login' %}">log in</a> to leave a comment.</p>
+{% endif %}
+    {% render_comment_list for answer %}
+
+    {% endfor %}
+
+</ul>
+{% if object.profile != request.user.profile %}
+<a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>
+{% endif %}
+{% endblock %}
