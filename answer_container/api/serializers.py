@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
+from QandA.models import Vote, Answer, Question
+from users.models import Profile
 
 class VoteSerializer(serializers.Serializer):
-    upvote = serializer.BooleanSerializer(read_only=True)
+    upvote = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Vote
@@ -10,12 +12,12 @@ class VoteSerializer(serializers.Serializer):
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     """  for main list display of Answers"""
-    profile = serializers.HyperlikedRelatedField(read_only=True, view_name='profile-detail')
+    profile = serializers.HyperlinkedRelatedField(read_only=True, view_name='profile-detail')
     question = serializers.HyperlinkedRelatedField(read_only=True, view_name='question-detail')
     vote_set = VoteSerializer('vote_set', read_only=True)
-    upvotes = SerializerMethodField()
-    downvotes = SerializerMethodField()
-    score = SerializerMethodField()
+    upvotes = serializers.SerializerMethodField()
+    downvotes = serializers.SerializerMethodField()
+    score = serializers.SerializerMethodField()
 
     def get_upvotes(self, obj):
         return obj.vote_set.filter(upvote=True).count()
@@ -34,7 +36,7 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     """ for main list display of questions"""
-    profile = serializers.HyperlikedRelatedField(read_only=True, view_name='profile-detail')
+    profile = serializers.HyperlinkedRelatedField(read_only=True, view_name='profile-detail')
     answer_set = AnswerSerializer('answer_set', read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 

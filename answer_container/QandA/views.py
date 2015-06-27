@@ -34,7 +34,7 @@ class Questions(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Question.objects.all().annotate(ans_count=Count('answer_set')).order_by('-timestamp')
+        return Question.objects.all().annotate(ans_count=Count('answer')).order_by('-timestamp')
 
 
 class QuestionDetail(DetailView):
