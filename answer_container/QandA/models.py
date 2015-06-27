@@ -8,6 +8,7 @@ class Question(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile)
     timestamp = models.DateTimeField(null=True)
+    accepted_answer = models.IntegerField(null=True)
 
     def __str__(self):
         return self.title

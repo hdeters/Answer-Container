@@ -1,9 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView
 from django.views.generic.detail import DetailView
+<<<<<<< HEAD
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+=======
+from QandA.models import Question, Vote, Answer
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+>>>>>>> master
 import datetime
 
 from QandA.forms import AnswerCreateForm
@@ -32,7 +39,13 @@ class Questions(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Question.objects.all().order_by('-timestamp')
+        return Question.objects.all().annotate(ans_count=Count('answer')).order_by('-timestamp')
+
+    # def get_context_data(self):
+    #     context = super().get_context_data()
+    #     answer_count = Question.objects.annotate(ans_count=Count('answer'))
+    #     context['answer_count'] = answer_count
+    #     return context
 
 
 class QuestionDetail(DetailView):
@@ -49,6 +62,12 @@ class QuestionDetail(DetailView):
                 item.voted = True
 
         context['answers'] = answers.order_by('-score')
+
+        if object.profile == self.request.user.profile:
+            own = True
+        else:
+            own = False
+        context['own'] = own
 
         return context
 
@@ -89,10 +108,24 @@ class CreateAnswer(TemplateView):
         form = AnswerCreateForm(request.POST)
         if form.is_valid():
             question = get_object_or_404(Question, pk=pk)
+<<<<<<< HEAD
             question.answer_set.create(text=form['text'].value(), \
+=======
+            question.answer_set.create(text=form['text'], \
+>>>>>>> master
                                        profile=request.user.profile)
 
             return redirect('qanda:question', pk=question.pk)
 
         context['form_errors'] = form.errors
         return render(request, 'QandA/answer-create.html', context)
+
+
+class AcceptAnswer(TemplateView):
+    def get(self, request, ans_pk, q_pk):
+        question = get_object_or_404(Question, pk=q_pk)
+        question.accepted_answer = ans_pk
+        question.save()
+        context = self.get_context_data()
+        context['q_pk'] = q_pk
+        return render(request, 'QandA/accept_answer.html', context)

@@ -7,7 +7,7 @@
 <h2>{{ object.title }}</h2>
 
 <p>
-  {{ object.text }}
+    {{ object.text }}
 </p>
 
 <ul>
@@ -31,6 +31,9 @@
     {% endif %}
 
   {% endfor %}
+
 </ul>
-<a href='{% url 'qanda:answer' pk=object.pk %}'>Answer this question</a>
+{% if object.profile != request.user.profile %}
+<a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>
+{% endif %}
 {% endblock %}
