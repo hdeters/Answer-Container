@@ -11,16 +11,27 @@
 </p>
 
 <ul>
-    {% for answer in answers %}
-    <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">{{ answer.profile.user.username }}</a>:
-        <p>{{ answer.text }}</p>Answer Score:<br/>
-        {% if not object.accepted_answer %}
-        {% if own %}
-        <a href="{% url 'qanda:accept_answer' ans_pk=answer.id q_pk=object.id %}">Accept This Answer</a>
-        {% endif %}
-        {% endif %}
-    </li>
-    {% endfor %}
+  {% for answer in answers %}
+
+    <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">
+      {{ answer.profile.user.username }}</a>:
+      {{ answer.text }}</li>
+    <li>  Answer Score: {{ answer.score }} </li>
+
+    {% if not answer.voted %}
+      <li>
+        <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
+          {% csrf_token %}
+          <input type="submit" value="Upvote"/></form></li>
+        <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+          {% csrf_token %}
+          <input type="submit" value="Downvote"/>
+        </form>
+      </li>
+    {% endif %}
+
+  {% endfor %}
+
 </ul>
 {% if object.profile != request.user.profile %}
 <a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>

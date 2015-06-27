@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^question/(?P<pk>[0-9]+)/answer/', views.CreateAnswer.as_view(), name='answer'),
     url(r'^accept/(?P<ans_pk>[0-9]+)/(?P<q_pk>[0-9]+)/', views.AcceptAnswer.as_view(), name='accept_answer'),
     url(r'^question/$', views.CreateQuestion.as_view(), name='question-create'),
+    url(r'^upvote/(?P<pk>[0-9]+)', views.upvote, name='upvote'),
+        url(r'^downvote/(?P<pk>[0-9]+)', views.downvote, name='downvote'),
 ]
