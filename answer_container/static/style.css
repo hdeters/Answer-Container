@@ -19,3 +19,16 @@
 #id_honeypot {
     display: none;
 }
+
+.votes {
+    width: 300px;
+}
+
+.upvote {
+    float: left;
+}
+
+.downvote {
+    float: right;
+    width: 230px;
+}
