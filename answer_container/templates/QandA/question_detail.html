@@ -11,26 +11,28 @@
 </p>
 
 <ul>
-  {% for answer in answers %}
+    {% for answer in answers %}
 
     <li><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">
-      {{ answer.profile.user.username }}</a>:
-      {{ answer.text }}</li>
-    <li>  Answer Score: {{ answer.score }} </li>
+        {{ answer.profile.user.username }}</a>:
+        {{ answer.text }}
+    </li>
+    <li> Answer Score: {{ answer.score }}</li>
 
     {% if not answer.pk in votes %}
-      <li>
+    <li>
         <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
-          {% csrf_token %}
-          <input type="submit" value="Upvote"/></form></li>
-        <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
-          {% csrf_token %}
-          <input type="submit" value="Downvote"/>
-        </form>
-      </li>
+            {% csrf_token %}
+            <input type="submit" value="Upvote"/></form>
+    </li>
+    <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+        {% csrf_token %}
+        <input type="submit" value="Downvote"/>
+    </form>
+    </li>
     {% endif %}
 
-  {% endfor %}
+    {% endfor %}
 
 </ul>
 {% if object.profile != request.user.profile %}
