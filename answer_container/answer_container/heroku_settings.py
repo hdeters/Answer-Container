@@ -14,6 +14,7 @@ INSTALLED_APPS = (
     'QandA',
     'api',
     'bootstrap3',
+    'rest_framework',
 )
 
 # Parse database configuration from $DATABASE_URL
