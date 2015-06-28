@@ -62,7 +62,7 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'profile', 'title', 'text', 'answer_set',)# 'tag_set')
 
     def create(self, validated_data):
-        profile = Profile.objects.get(user=self.request.user)
+        profile = Profile.objects.get(user=self.context['request'].user)
         question = Question.objects.create(profile=profile, **validated_data)
         return question
 
