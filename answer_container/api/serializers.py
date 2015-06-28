@@ -42,12 +42,12 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     """ for main list display of questions"""
     profile = serializers.HyperlinkedRelatedField(read_only=True, \
                                                   view_name='profile-detail')
-    #answer_set = AnswerSerializer('answer_set', read_only=True)
+    answer_set = AnswerSerializer('answer_set', many=True, read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
     class Meta:
         model = Question
-        fields = ('url', 'profile',)# 'answer_set',)# 'tag_set')
+        fields = ('url', 'profile', 'answer_set',)# 'tag_set')
 
 
 class AnswerEditSerializer(serializers.Serializer):
@@ -80,23 +80,15 @@ class AnswerEditSerializer(serializers.Serializer):
         return answer
 
 
-# class UserSerializer(serializers.Serializer):
-#     username = serializers.CharField()
-#
-#     class Meta:
-#         model = User
-#         fields = ('username', )
-
-
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    #user = UserSerializer('user')
     username = serializers.CharField(source='user.username')
     question_set = serializers.HyperlinkedRelatedField(many=True, \
                                                     read_only=True, \
                                                     view_name='question-detail')
-    #answer_set = serializers.HyperlinkedRelatedField(read_only=True, \
-    #                                                 view_name='answer-detail')
+    answer_set = serializers.HyperlinkedRelatedField(many=True, \
+                                                     read_only=True, \
+                                                     view_name='answer-detail')
 
     class Meta:
         model = Profile
-        fields = ('url', 'username', 'question_set',)# answer_set,)
+        fields = ('url', 'username', 'question_set', 'answer_set',)

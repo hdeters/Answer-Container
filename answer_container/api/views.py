@@ -3,7 +3,8 @@ from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
-from api.serializers import QuestionSerializer, ProfileSerializer
+from api.serializers import QuestionSerializer, ProfileSerializer, \
+                            AnswerSerializer
 from QandA.models import Question, Answer, Vote, Tag
 from users.models import Profile
 
@@ -21,7 +22,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
-    pass
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permissions_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    pagination_class = StandardResultsSetPagination
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
