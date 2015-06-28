@@ -12,6 +12,7 @@ INSTALLED_APPS = (
     'django_comments',
     'users',
     'QandA',
+    'api',
     'bootstrap3',
 )
 
