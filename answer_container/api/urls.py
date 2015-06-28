@@ -10,7 +10,6 @@ router.register(r'answers', views.AnswerViewSet)
 router.register(r'questions', views.QuestionViewSet)
 router.register(r'profiles', views.ProfileViewSet)
 
-
 urlpatterns = [
     url(r'^', include(router.urls)),
 ]

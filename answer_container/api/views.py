@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
@@ -19,6 +20,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     permissions_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = StandardResultsSetPagination
+    allowed_methods = ['GET', 'POST', 'PUT', 'DELETE']
 
 
 class AnswerViewSet(viewsets.ModelViewSet):

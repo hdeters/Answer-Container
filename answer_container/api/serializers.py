@@ -39,45 +39,32 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
-    """ for main list display of questions"""
     profile = serializers.HyperlinkedRelatedField(read_only=True, \
                                                   view_name='profile-detail')
+    title = serializers.CharField()
+    text = serializers.CharField()
     answer_set = AnswerSerializer('answer_set', many=True, read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
     class Meta:
         model = Question
-        fields = ('url', 'profile', 'answer_set',)# 'tag_set')
-
-
-class AnswerEditSerializer(serializers.Serializer):
-    """ for editing and creation of Answers"""
-    profile = serializers.PrimaryKeyRelatedField(\
-                    queryset=Profile.objects.all())
-    question = serializers.PrimaryKeyRelatedField(\
-                    queryset=Question.objects.all())
-    vote_set = VoteSerializer('vote_set')
-
-    class Meta:
-        model = Answer
-        fields = ('profile', 'question', 'vote_set')
-
+        fields = ('url', 'profile', 'title', 'text', 'answer_set',)# 'tag_set')
 
     def create(self, validated_data):
-        answer = Answer.objects.create(**validated_data)
-        return answer
+        profile = Profile.objects.get(user=request.user)
+        question = Question.objects.create(profile=profile, **validate_data)
+        return question
 
-    def update(self, answer, validated_data):
-        vote_set = validated_data.get('vote_set')
+    def update(self, question, validated_data):
+        options = ['title', 'text'] # can't change profile
+        for item in options:
+            if validated_data.get(item):
+                bookmark[item] = validated_data['item']
 
-        if vote_set:
-            vote_set = VoteSerializer(vote_set, many=True)
-            if vote_set.is_valid():
-                answer.vote_set.all().delete()
-                answer.vote_set = vote_set.save()
-                answer.save()
+        #if validated_data.get('answer_set'): # loop through, create as needed
 
-        return answer
+        bookmark.save()
+        return bookmark
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
