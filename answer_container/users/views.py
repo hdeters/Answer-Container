@@ -13,7 +13,7 @@ class AddUserView(View):
     def get(self, request):
         user_form = UserForm()
         profile_form = ProfileForm()
-        return render(request, "register.html", {"form1": user_form, "form2": profile_form})
+        return render(request, "users/register.html", {"form1": user_form, "form2": profile_form})
 
     def post(self, request):
         user_form = UserForm(request.POST)
@@ -39,13 +39,13 @@ class AddUserView(View):
             return redirect("qanda:questions")
 
         else:
-            return render(request, "register.html", {"form1": user_form, "form2": profile_form})
+            return render(request, "users/register.html", {"form1": user_form, "form2": profile_form})
 
 
 class ShowProfileDetailView(DetailView):
     model = Profile
     context_object_name = 'profile'
-    template_name = 'profile.html'
+    template_name = 'users/profile.html'
 
     def get_object(self, queryset=None):
         return Profile.objects.get(pk=self.kwargs['prof_id'])
