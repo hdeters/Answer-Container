@@ -59,12 +59,12 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         options = ['title', 'text'] # can't change profile
         for item in options:
             if validated_data.get(item):
-                bookmark[item] = validated_data['item']
+                question[item] = validated_data['item']
 
         #if validated_data.get('answer_set'): # loop through, create as needed
 
-        bookmark.save()
-        return bookmark
+        question.save()
+        return question
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
