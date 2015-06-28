@@ -35,3 +35,4 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = StandardResultsSetPagination
+
