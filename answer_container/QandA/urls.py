@@ -11,4 +11,8 @@ urlpatterns = [
     url(r'^question/$', views.CreateQuestion.as_view(), name='question-create'),
     url(r'^upvote/(?P<pk>[0-9]+)', views.upvote, name='upvote'),
         url(r'^downvote/(?P<pk>[0-9]+)', views.downvote, name='downvote'),
+    url(r'^update_question/(?P<pk>\d*)$', views.QuestionUpdate.as_view(), name="update_question"),
+    url(r'^update_answer/(?P<pk>\d*)$', views.AnswerUpdate.as_view(), name="update_answer"),
+    url(r'^delete_question/(?P<pk>\d+)$', views.QuestionDelete.as_view(), name='delete_question'),
+    url(r'^delete_answer/(?P<pk>\d+)$', views.AnswerDelete.as_view(), name='delete_answer'),
 ]
