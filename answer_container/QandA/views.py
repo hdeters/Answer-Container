@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.urlresolvers import reverse, reverse_lazy
 import pytz
-from django_comments.models import Comment
 
 import datetime
 
@@ -62,18 +61,18 @@ class QuestionDetail(DetailView):
         else:
             update_delete_question = True
 
-        comment_pks = []
-        for comment in Comment.objects.all():
-            comment_pks.append(int(comment.object_pk))
-        update_delete_answer = []
+        # comment_pks = []
+        # for comment in Comment.objects.all():
+        #     comment_pks.append(int(comment.object_pk))
+        # update_delete_answer = []
 
         for answer in answers:
             if pytz.utc.localize(datetime.datetime.utcnow()) > (answer.timestamp + datetime.timedelta(minutes=10)):
                 update_delete_answer.append(False)
             elif answer.vote_set.count() >= 1:
                 update_delete_answer.append(False)
-            elif answer.pk in comment_pks:
-                update_delete_answer.append(False)
+            # elif answer.pk in comment_pks:
+            #     update_delete_answer.append(False)
             else:
                 update_delete_answer.append(True)
 
