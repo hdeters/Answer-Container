@@ -80,16 +80,17 @@ class AnswerEditSerializer(serializers.Serializer):
         return answer
 
 
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField()
-
-    class Meta:
-        model = User
-        fields = ('username', )
+# class UserSerializer(serializers.Serializer):
+#     username = serializers.CharField()
+#
+#     class Meta:
+#         model = User
+#         fields = ('username', )
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer('user')
+    #user = UserSerializer('user')
+    username = serializers.CharField(source='user.username')
     question_set = serializers.HyperlinkedRelatedField(many=True, \
                                                     read_only=True, \
                                                     view_name='question-detail')
@@ -98,4 +99,4 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('url', 'user', 'question_set',)# answer_set,)
+        fields = ('url', 'username', 'question_set',)# answer_set,)
