@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'debug_toolbar',
     'django_extensions',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django_comments',
     'users',
     'QandA',

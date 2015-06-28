@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 {% extends 'base.html' %}
-{% load comments %}
+<!--{% load comments %}-->
 {% block content %}
 
 <h2>{{ object.title }}</h2>
@@ -50,26 +50,26 @@
     {% endif %}
 </div>
 
-<div>
-    {% render_comment_list for answer.0 %}
-    {% if user.is_authenticated %}
-    {% get_comment_form for answer.0 as form %}
-    <form action="{% comment_form_target %}" method="POST">
-        {% csrf_token %}
-        {{ form.comment }}
-        {{ form.honeypot }}
-        {{ form.content_type }}
-        {{ form.object_pk }}
-        {{ form.timestamp }}
-        {{ form.security_hash }}
-        <input type="hidden" name="next" value="{% url 'qanda:question' object.id %}"/>
-        <input type="submit" value="Add comment" id="id_submit"/>
-    </form>
-    {% else %}
-    <p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>
-    {% endif %}
-</div>
-<br/>
+<!--<div>-->
+    <!--{% render_comment_list for answer.0 %}-->
+    <!--{% if user.is_authenticated %}-->
+    <!--{% get_comment_form for answer.0 as form %}-->
+    <!--<form action="{% comment_form_target %}" method="POST">-->
+        <!--{% csrf_token %}-->
+        <!--{{ form.comment }}-->
+        <!--{{ form.honeypot }}-->
+        <!--{{ form.content_type }}-->
+        <!--{{ form.object_pk }}-->
+        <!--{{ form.timestamp }}-->
+        <!--{{ form.security_hash }}-->
+        <!--<input type="hidden" name="next" value="{% url 'qanda:question' object.id %}"/>-->
+        <!--<input type="submit" value="Add comment" id="id_submit"/>-->
+    <!--</form>-->
+    <!--{% else %}-->
+    <!--<p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>-->
+    <!--{% endif %}-->
+<!--</div>-->
+<!--<br/>-->
 
 {% endfor %}
 

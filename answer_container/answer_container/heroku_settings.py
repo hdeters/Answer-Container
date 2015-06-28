@@ -8,7 +8,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django_comments',
     'users',
     'QandA',
