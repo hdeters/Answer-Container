@@ -16,30 +16,30 @@
 {% endif %}
 <br/>
 
-{% for answer in answers %}
+{% for answer in answers_update_delete %}
 
 <div class="question-container">
-    <h5><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">
-        {{ answer.profile.user.username }}</a>:</h5>
-    <h5>{{ answer.text }}</h5>
-    Answer Score: {{ answer.score }}
+    <h5><a href="{% url 'users:profile' prof_id=answer.0.profile.pk %}">
+        {{ answer.0.profile.user.username }}</a>:</h5>
+    <h5>{{ answer.0.text }}</h5>
+    Answer Score: {{ answer.0.score }}
     <br/>
-    {% if answer.profile == request.user.profile %}
-    {% if update_delete_time %}
-    <a href="{% url 'qanda:update_answer' pk=answer.pk %}">Update</a> |
-    <a href="{% url 'qanda:delete_answer' pk=answer.pk %}">Delete</a>
+    {% if answer.0.profile == request.user.profile %}
+    {% if answer.1 %}
+    <a href="{% url 'qanda:update_answer' pk=answer.0.pk %}">Update</a> |
+    <a href="{% url 'qanda:delete_answer' pk=answer.0.pk %}">Delete</a>
     {% endif %}
     {% else %}
-    {% if not answer.pk in votes %}
+    {% if not answer.0.pk in votes %}
     <div class="votes">
         <div class="upvote">
-            <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
+            <form method="post" action="{% url 'qanda:upvote' pk=answer.0.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Upvote"/></form>
         </div>
 
         <div class="downvote">
-            <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+            <form method="post" action="{% url 'qanda:downvote' pk=answer.0.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Downvote"/>
             </form>
@@ -51,9 +51,9 @@
 </div>
 
 <div>
-    {% render_comment_list for answer %}
+    {% render_comment_list for answer.0 %}
     {% if user.is_authenticated %}
-    {% get_comment_form for answer as form %}
+    {% get_comment_form for answer.0 as form %}
     <form action="{% comment_form_target %}" method="POST">
         {% csrf_token %}
         {{ form.comment }}

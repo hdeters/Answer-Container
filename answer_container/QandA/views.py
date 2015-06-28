@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.urlresolvers import reverse, reverse_lazy
 import pytz
-import django_comments as comments
+from django_comments.models import Comment
 
 import datetime
 
@@ -50,7 +50,7 @@ class QuestionDetail(DetailView):
             answer.set_score()
             answer.save()
 
-        context['answers'] = list(answers.order_by('-score'))
+        answers_sorted = list(answers.order_by('-score'))
 
         context['votes'] = [item['answer'] for item in \
                             self.request.user.profile.vote_set.values('answer')]
@@ -62,17 +62,22 @@ class QuestionDetail(DetailView):
         else:
             update_delete_question = True
 
-        comment = comments.get_model()
+        comment_pks = []
+        for comment in Comment.objects.all():
+            comment_pks.append(int(comment.object_pk))
+        update_delete_answer = []
 
         for answer in answers:
             if pytz.utc.localize(datetime.datetime.utcnow()) > (answer.timestamp + datetime.timedelta(minutes=10)):
-                update_delete_answer = False
+                update_delete_answer.append(False)
             elif answer.vote_set.count() >= 1:
-                update_delete_answer = False
-            #elif comment.objects.all()__contains answer
+                update_delete_answer.append(False)
+            elif answer.pk in comment_pks:
+                update_delete_answer.append(False)
+            else:
+                update_delete_answer.append(True)
 
-
-        context['update_delete_answer'] = update_delete_answer
+        context['answers_update_delete'] = zip(answers_sorted, update_delete_answer)
         context['update_delete_question'] = update_delete_question
 
         if object.profile == self.request.user.profile:
@@ -153,8 +158,7 @@ class CreateAnswer(TemplateView):
         form = AnswerCreateForm(request.POST)
         if form.is_valid():
             question = get_object_or_404(Question, pk=pk)
-            question.answer_set.create(text=form['text'].value(), \
-
+            question.answer_set.create(text=form['text'].value(), timestamp=datetime.datetime.utcnow(),
                                        profile=request.user.profile)
 
             return redirect('qanda:question', pk=question.pk)
@@ -173,7 +177,7 @@ class AnswerUpdate(UpdateView):
         return answer
 
     def get_success_url(self):
-        return reverse('qanda:question', kwargs={'pk': self.object.pk})
+        return reverse('qanda:question', kwargs={'pk': self.object.question.pk})
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

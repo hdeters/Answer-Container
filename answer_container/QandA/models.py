@@ -29,6 +29,7 @@ class Answer(models.Model):
     profile = models.ForeignKey(Profile)
     question = models.ForeignKey('Question')
     score = models.IntegerField(default=0)
+    timestamp = models.DateTimeField(null=True)
 
     objects = AnswerManager()
 
