@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.urlresolvers import reverse, reverse_lazy
 import pytz
-from django_comments.models import Comment
+# from django_comments.models import Comment
 
 import datetime
 

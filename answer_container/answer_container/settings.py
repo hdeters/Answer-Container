@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'django_extensions',
     # 'django.contrib.sites',
-    'django_comments',
+    # 'django_comments',
     'users',
     'QandA',
     'api',
@@ -59,7 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-SITE_ID = 1
+# SITE_ID = 1
 ROOT_URLCONF = 'answer_container.urls'
 LOGIN_URL = 'users/login'
 
