@@ -82,14 +82,21 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         return question
 
 
+class EditQuestionSerializer(serializers.Serializer):
+    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
+    title = serializers.CharField()
+    text = serializers.CharField()
+    answer_set = EditAnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = ('profile', 'title', 'text', 'answer_set')
+
+
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(source='user.username')
-    question_set = serializers.HyperlinkedRelatedField(many=True, \
-                                                    read_only=True, \
-                                                    view_name='question-detail')
-    answer_set = serializers.HyperlinkedRelatedField(many=True, \
-                                                     read_only=True, \
-                                                     view_name='answer-detail')
+    question_set = EditQuestionSerializer(many=True)
+    answer_set = EditAnswerSerializer(many=True)
 
     class Meta:
         model = Profile
