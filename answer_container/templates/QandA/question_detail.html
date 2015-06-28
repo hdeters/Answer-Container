@@ -10,6 +10,9 @@
 
 {% if object.profile != request.user.profile %}
 <a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>
+{% elif update_delete_time and update_delete_question %}
+<a href="{% url 'qanda:update_question' pk=object.pk %}">Update</a> |
+<a href="{% url 'qanda:delete_question' pk=object.pk %}">Delete</a>
 {% endif %}
 <br/>
 
@@ -20,7 +23,13 @@
         {{ answer.profile.user.username }}</a>:</h5>
     <h5>{{ answer.text }}</h5>
     Answer Score: {{ answer.score }}
-
+    <br/>
+    {% if answer.profile == request.user.profile %}
+    {% if update_delete_time %}
+    <a href="{% url 'qanda:update_answer' pk=answer.pk %}">Update</a> |
+    <a href="{% url 'qanda:delete_answer' pk=answer.pk %}">Delete</a>
+    {% endif %}
+    {% else %}
     {% if not answer.pk in votes %}
     <div class="votes">
         <div class="upvote">
@@ -37,6 +46,7 @@
         </div>
     </div>
     <br/>
+    {% endif %}
     {% endif %}
 </div>
 
