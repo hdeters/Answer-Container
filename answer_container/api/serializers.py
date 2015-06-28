@@ -11,13 +11,14 @@ class VoteSerializer(serializers.Serializer):
         model = Vote
         fields = ('upvote',)
 
+
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     """  for main list display of Answers"""
     profile = serializers.HyperlinkedRelatedField(read_only=True, \
                                                   view_name='profile-detail')
     question = serializers.HyperlinkedRelatedField(read_only=True, \
                                                    view_name='question-detail')
-    vote_set = VoteSerializer('vote_set', read_only=True)
+    vote_set = VoteSerializer('vote_set', many=True, read_only=True)
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
@@ -38,12 +39,22 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
                   'upvotes', 'downvotes')
 
 
+class EditAnswerSerializer(serializers.Serializer):
+    profile = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
+    text = serializers.CharField()
+    vote_set = VoteSerializer('vote_set', many=True)
+
+    class Meta:
+        model = Answer
+        fields = ('profile', 'text', 'vote_set')
+
+
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     profile = serializers.HyperlinkedRelatedField(read_only=True, \
                                                   view_name='profile-detail')
     title = serializers.CharField()
     text = serializers.CharField()
-    answer_set = AnswerSerializer('answer_set', many=True, read_only=True)
+    answer_set = EditAnswerSerializer('answer_set', many=True, read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
     class Meta:
@@ -51,17 +62,21 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'profile', 'title', 'text', 'answer_set',)# 'tag_set')
 
     def create(self, validated_data):
-        profile = Profile.objects.get(user=request.user)
-        question = Question.objects.create(profile=profile, **validate_data)
+        profile = Profile.objects.get(user=self.request.user)
+        question = Question.objects.create(profile=profile, **validated_data)
         return question
 
     def update(self, question, validated_data):
-        options = ['title', 'text'] # can't change profile
+        options = ['title', 'text']
         for item in options:
             if validated_data.get(item):
                 question[item] = validated_data['item']
 
-        #if validated_data.get('answer_set'): # loop through, create as needed
+        if validated_data.get('answer_set'):
+            answer_set = validated_data['answer_set']
+            question.answer_set.all().delete()
+            for item in answer_set:
+                question.answer_set.create(**item)
 
         question.save()
         return question

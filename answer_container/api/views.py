@@ -18,7 +18,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permissions_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = StandardResultsSetPagination
     allowed_methods = ['GET', 'POST', 'PUT', 'DELETE']
 
