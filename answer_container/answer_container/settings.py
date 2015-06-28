@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'users',
     'QandA',
     'bootstrap3',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -145,3 +146,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 
 )
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
