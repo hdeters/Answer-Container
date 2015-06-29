@@ -72,6 +72,7 @@ class QuestionDetail(DetailView):
             comment_pks.append(int(comment.answer.pk))
 
         update_delete_answer = []
+        context['update_delete_question'] = update_delete_question
 
         for answer in answers:
             if pytz.utc.localize(datetime.datetime.utcnow()) > (answer.timestamp + datetime.timedelta(minutes=10)):
@@ -83,7 +84,7 @@ class QuestionDetail(DetailView):
             else:
                 update_delete_answer.append(True)
 
-
+        context['answers_update_delete'] = zip(answers_sorted, update_delete_answer)
         context['own'] = own
 
         return context
