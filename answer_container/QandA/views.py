@@ -49,13 +49,15 @@ class QuestionDetail(DetailView):
 
         context['answers'] = list(answers.order_by('-score'))
 
-        context['votes'] = [item['answer'] for item in \
-                            self.request.user.profile.vote_set.values('answer')]
+        own = False
 
-        if object.profile == self.request.user.profile:
-            own = True
-        else:
-            own = False
+        if user.is_authenticated():
+            context['votes'] = [item['answer'] for item in \
+                                self.request.user.profile.vote_set.values('answer')]
+
+            if object.profile == self.request.user.profile:
+                own = True
+
         context['own'] = own
 
         return context
