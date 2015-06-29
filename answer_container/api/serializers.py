@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+import datetime
 
 from QandA.models import Vote, Answer, Question
 from users.models import Profile
@@ -16,8 +17,7 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     """  for main list display of Answers"""
     profile = serializers.HyperlinkedRelatedField(read_only=True, \
                                                   view_name='profile-detail')
-    question = serializers.HyperlinkedRelatedField(read_only=True, \
-                                                   view_name='question-detail')
+    #question = serializers.HyperlinkedRelatedField(read_only=True, view_name='question-detail')
     vote_set = VoteSerializer('vote_set', many=True, read_only=True)
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
@@ -35,8 +35,13 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('url', 'profile', 'question', 'score', 'vote_set', \
+        fields = ('url', 'profile', 'question', 'text', 'score', 'vote_set', \
                   'upvotes', 'downvotes')
+
+    def create(self, validated_data):
+        profile = Profile.objects.get(user=self.context['request'].user)
+        answer = Answer.objects.create(profile=profile, timestamp=datetime.datetime.utcnow(), **validated_data)
+        return answer
 
 
 class EditAnswerSerializer(serializers.Serializer):
@@ -54,16 +59,17 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
                                                   view_name='profile-detail')
     title = serializers.CharField()
     text = serializers.CharField()
+    timestamp = serializers.DateTimeField(read_only=True)
     answer_set = EditAnswerSerializer('answer_set', many=True, read_only=True)
     #tag_set = TagSerializer('tag_set', read_only=True)
 
     class Meta:
         model = Question
-        fields = ('url', 'profile', 'title', 'text', 'answer_set',)# 'tag_set')
+        fields = ('url', 'profile', 'title', 'text', 'timestamp', 'answer_set',)# 'tag_set')
 
     def create(self, validated_data):
         profile = Profile.objects.get(user=self.context['request'].user)
-        question = Question.objects.create(profile=profile, **validated_data)
+        question = Question.objects.create(profile=profile, timestamp=datetime.datetime.utcnow(), **validated_data)
         return question
 
     def update(self, question, validated_data):
@@ -95,9 +101,9 @@ class EditQuestionSerializer(serializers.Serializer):
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(source='user.username')
-    question_set = EditQuestionSerializer(many=True)
-    answer_set = EditAnswerSerializer(many=True)
+    question_set = EditQuestionSerializer(many=True, read_only=True)
+    answer_set = EditAnswerSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
-        fields = ('url', 'username', 'question_set', 'answer_set',)
+        fields = ('url', 'username', 'get_score', 'question_set', 'answer_set',)

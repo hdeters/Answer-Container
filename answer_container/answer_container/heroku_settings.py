@@ -39,7 +39,7 @@ STATIC_ROOT = 'staticfiles'
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
-DEBUG = True
+DEBUG = False
 
 import os
 SECRET_KEY = os.environ['SECRET_KEY']

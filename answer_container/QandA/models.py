@@ -49,4 +49,7 @@ class Vote(models.Model):
     class Meta:
         unique_together = ('profile', 'answer',)
 
-
+class Comment(models.Model):
+    text = models.TextField()
+    profile = models.ForeignKey(Profile)
+    answer = models.ForeignKey(Answer)
