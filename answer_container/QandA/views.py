@@ -51,8 +51,14 @@ class QuestionDetail(DetailView):
 
         answers_sorted = list(answers.order_by('-score'))
 
-        context['votes'] = [item['answer'] for item in \
-                            self.request.user.profile.vote_set.values('answer')]
+        own = False
+
+        if user.is_authenticated():
+            context['votes'] = [item['answer'] for item in \
+                                self.request.user.profile.vote_set.values('answer')]
+
+            if object.profile == self.request.user.profile:
+                own = True
 
         if pytz.utc.localize(datetime.datetime.utcnow()) > (object.timestamp + datetime.timedelta(minutes=10)):
             update_delete_question = False
@@ -77,13 +83,7 @@ class QuestionDetail(DetailView):
             else:
                 update_delete_answer.append(True)
 
-        context['answers_update_delete'] = zip(answers_sorted, update_delete_answer)
-        context['update_delete_question'] = update_delete_question
 
-        if object.profile == self.request.user.profile:
-            own = True
-        else:
-            own = False
         context['own'] = own
 
         return context

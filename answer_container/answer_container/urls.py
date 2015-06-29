@@ -1,6 +1,8 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from . import views
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('django.contrib.auth.urls', namespace='accounts')),
@@ -9,4 +11,5 @@ urlpatterns = [
     url(r'^comments/', include('django_comments.urls')),
     url(r'^api/', include('api.urls')),#, namespace='api')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^$', views.QandARedirect),
 ]
