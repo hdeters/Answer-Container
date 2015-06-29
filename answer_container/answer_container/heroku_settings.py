@@ -8,12 +8,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'django.contrib.sites',
-    'django_comments',
+    # 'django.contrib.sites',
+    # 'django_comments',
     'users',
     'QandA',
+    'api',
     'bootstrap3',
+    'rest_framework',
 )
+
+# SITE_ID=1
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url

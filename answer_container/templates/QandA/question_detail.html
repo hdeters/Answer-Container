@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 {% extends 'base.html' %}
-{% load comments %}
 {% block content %}
 
 <h2>{{ object.title }}</h2>
@@ -10,27 +9,36 @@
 
 {% if object.profile != request.user.profile %}
 <a href="{% url 'qanda:answer' pk=object.pk %}">Answer this question</a>
+{% elif update_delete_time and update_delete_question %}
+<a href="{% url 'qanda:update_question' pk=object.pk %}">Update</a> |
+<a href="{% url 'qanda:delete_question' pk=object.pk %}">Delete</a>
 {% endif %}
 <br/>
 
-{% for answer in answers %}
+{% for answer in answers_update_delete %}
 
 <div class="question-container">
-    <h5><a href="{% url 'users:profile' prof_id=answer.profile.pk %}">
-        {{ answer.profile.user.username }}</a>:</h5>
-    <h5>{{ answer.text }}</h5>
-    Answer Score: {{ answer.score }}
-
-    {% if not answer.pk in votes %}
+    <h5><a href="{% url 'users:profile' prof_id=answer.0.profile.pk %}">
+        {{ answer.0.profile.user.username }}</a>:</h5>
+    <h5>{{ answer.0.text }}</h5>
+    Answer Score: {{ answer.0.score }}
+    <br/>
+    {% if answer.0.profile == request.user.profile %}
+    {% if answer.1 %}
+    <a href="{% url 'qanda:update_answer' pk=answer.0.pk %}">Update</a> |
+    <a href="{% url 'qanda:delete_answer' pk=answer.0.pk %}">Delete</a>
+    {% endif %}
+    {% else %}
+    {% if not answer.0.pk in votes %}
     <div class="votes">
         <div class="upvote">
-            <form method="post" action="{% url 'qanda:upvote' pk=answer.pk %}">
+            <form method="post" action="{% url 'qanda:upvote' pk=answer.0.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Upvote"/></form>
         </div>
 
         <div class="downvote">
-            <form method="post" action="{% url 'qanda:downvote' pk=answer.pk %}">
+            <form method="post" action="{% url 'qanda:downvote' pk=answer.0.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Downvote"/>
             </form>
@@ -38,28 +46,8 @@
     </div>
     <br/>
     {% endif %}
-</div>
-
-<div>
-    {% render_comment_list for answer %}
-    {% if user.is_authenticated %}
-    {% get_comment_form for answer as form %}
-    <form action="{% comment_form_target %}" method="POST">
-        {% csrf_token %}
-        {{ form.comment }}
-        {{ form.honeypot }}
-        {{ form.content_type }}
-        {{ form.object_pk }}
-        {{ form.timestamp }}
-        {{ form.security_hash }}
-        <input type="hidden" name="next" value="{% url 'qanda:question' object.id %}"/>
-        <input type="submit" value="Add comment" id="id_submit"/>
-    </form>
-    {% else %}
-    <p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>
     {% endif %}
 </div>
-<br/>
 
 {% endfor %}
 
