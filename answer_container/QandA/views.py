@@ -53,7 +53,7 @@ class QuestionDetail(DetailView):
 
         own = False
 
-        if user.is_authenticated():
+        if self.user.is_authenticated():
             context['votes'] = [item['answer'] for item in \
                                 self.request.user.profile.vote_set.values('answer')]
 
