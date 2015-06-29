@@ -49,6 +49,11 @@
     {% endif %}
 </div>
 
+<a href="{% url 'qanda:create_comment' pk=answer.0.pk %}">Comment</a><br />
+{% for comment in answer.0.comment_set.all %}
+<div class="comment">{{ comment.text }} -- {{ comment.profile }}</div>
+{% endfor %}
+
 {% endfor %}
 
 {% endblock %}
