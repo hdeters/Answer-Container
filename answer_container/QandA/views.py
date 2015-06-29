@@ -82,7 +82,9 @@ class QuestionDetail(DetailView):
                 update_delete_answer.append(False)
             else:
                 update_delete_answer.append(True)
-                
+
+        context['update_delete_question'] = update_delete_question
+        context['answers_update_delete'] = zip(answers_sorted, update_delete_answer)
         context['own'] = own
 
         return context
