@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^update_answer/(?P<pk>\d*)$', views.AnswerUpdate.as_view(), name="update_answer"),
     url(r'^delete_question/(?P<pk>\d+)$', views.QuestionDelete.as_view(), name='delete_question'),
     url(r'^delete_answer/(?P<pk>\d+)$', views.AnswerDelete.as_view(), name='delete_answer'),
+    url(r'^add_comment/(?P<pk>\d+)/$', views.CreateComment.as_view(), name="create_comment"),
 ]

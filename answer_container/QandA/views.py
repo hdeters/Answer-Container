@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.views.generic import TemplateView, UpdateView, CreateView, ListView, DeleteView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
@@ -10,8 +10,8 @@ import pytz
 
 import datetime
 
-from QandA.forms import AnswerCreateForm
-from QandA.models import Question, Vote, Answer
+from QandA.forms import AnswerCreateForm, CommentCreateForm
+from QandA.models import Question, Vote, Answer, Comment
 
 
 @login_required
@@ -44,7 +44,7 @@ class QuestionDetail(DetailView):
 
     def get_context_data(self, object):
         context = super().get_context_data()
-        answers = object.answer_set.all()
+        answers = object.answer_set.all().prefetch_related()
         for answer in answers:
             answer.set_score()
             answer.save()
@@ -67,18 +67,19 @@ class QuestionDetail(DetailView):
         else:
             update_delete_question = True
 
-        # comment_pks = []
-        # for comment in Comment.objects.all():
-        #     comment_pks.append(int(comment.object_pk))
-        # update_delete_answer = []
+        comment_pks = []
+        for comment in Comment.objects.all():
+            comment_pks.append(int(comment.answer.pk))
+
+        update_delete_answer = []
 
         for answer in answers:
             if pytz.utc.localize(datetime.datetime.utcnow()) > (answer.timestamp + datetime.timedelta(minutes=10)):
                 update_delete_answer.append(False)
             elif answer.vote_set.count() >= 1:
                 update_delete_answer.append(False)
-            # elif answer.pk in comment_pks:
-            #     update_delete_answer.append(False)
+            elif answer.pk in comment_pks:
+                update_delete_answer.append(False)
             else:
                 update_delete_answer.append(True)
 
@@ -207,3 +208,23 @@ class AcceptAnswer(TemplateView):
         context = self.get_context_data()
         context['q_pk'] = q_pk
         return render(request, 'QandA/accept_answer.html', context)
+
+
+class CreateComment(CreateView):
+    model = Comment
+    fields = ['text', ]
+
+    def get(self, request, pk):
+        return super().get(request)
+
+    @method_decorator(login_required)
+    def post(self, request, pk):
+        text = request.POST['text']
+        answer = Answer.objects.get(pk=self.kwargs['pk'])
+        question_pk = answer.question.pk
+
+        Comment.objects.create(text=text, \
+                               profile=request.user.profile, \
+                               answer=answer)
+
+        return redirect('qanda:question', pk=question_pk)

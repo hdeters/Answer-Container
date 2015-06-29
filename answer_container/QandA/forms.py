@@ -9,7 +9,7 @@ class AnswerCreateForm(forms.Form):
         model = Answer
         fields = ('text',)
 
-class CommentCreateForm(forms.ModelForm):
+class CommentCreateForm(forms.Form):
     text = forms.CharField(required=True)
 
     class Meta:
